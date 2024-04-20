@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cahaik <cahaik@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/20 11:42:46 by cahaik            #+#    #+#             */
-/*   Updated: 2024/04/20 15:31:10 by cahaik           ###   ########.fr       */
+/*   Created: 2024/04/20 17:35:50 by cahaik            #+#    #+#             */
+/*   Updated: 2024/04/20 18:30:10 by cahaik           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*my_read_line(int fd, char **reminder)
 {
@@ -62,26 +62,28 @@ char	*our_line(char *start)
 
 char	*get_next_line(int fd)
 {
-	static char	*reminder;
+	static char	*reminder[OPEN_MAX];
 	char		*tmp;
 	char		*line;
 	char		*search;
 
+	if (fd < 0 || fd > OPEN_MAX)
+		return (NULL);
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-		return (free(reminder), reminder = NULL, NULL);
-	my_read_line(fd, &reminder);
-	search = ft_strchr(reminder, '\n');
-	if (reminder && !search)
+		return (free(reminder[fd]), reminder[fd] = NULL, NULL);
+	my_read_line(fd, &reminder[fd]);
+	search = ft_strchr(reminder[fd], '\n');
+	if (reminder[fd] && !search)
 	{
-		tmp = ft_strdup(reminder);
-		free(reminder);
-		return (reminder = NULL, tmp);
+		tmp = ft_strdup(reminder[fd]);
+		free(reminder[fd]);
+		return (reminder[fd] = NULL, tmp);
 	}
-	else if (reminder && search)
+	else if (reminder[fd] && search)
 	{
-		tmp = reminder;
-		line = our_line(reminder);
-		reminder = ft_strdup(search + 1);
+		tmp = reminder[fd];
+		line = our_line(reminder[fd]);
+		reminder[fd] = ft_strdup(search + 1);
 		return (free(tmp), line);
 	}
 	return (NULL);
