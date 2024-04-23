@@ -6,7 +6,7 @@
 /*   By: cahaik <cahaik@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 17:35:50 by cahaik            #+#    #+#             */
-/*   Updated: 2024/04/20 18:30:10 by cahaik           ###   ########.fr       */
+/*   Updated: 2024/04/23 10:38:20 by cahaik           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ char	*my_read_line(int fd, char **reminder)
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
 		{
+			free(buffer);
 			free(*reminder);
-			reminder = NULL;
+			*reminder = NULL;
 			return (NULL);
 		}
 		buffer[bytes_read] = '\0';
